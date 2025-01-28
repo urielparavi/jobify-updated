@@ -3,6 +3,25 @@ dotenv.config();
 import express from 'express';
 import morgan from 'morgan';
 
+// const getData = async () => {
+
+// };
+// getData();
+
+// try {
+//   const response = await fetch(
+//     'https://www.course-api.com/react-useReducer-cart-project'
+//   );
+//   const cardData = await response.json();
+//   console.log(cardData);
+// } catch (error) {
+//   console.log(error);
+// }
+
+// fetch('https://www.course-api.com/react-useReducer-cart-project')
+//   .then((res) => res.json())
+//   .then((data) => console.log(data));
+
 const app = express();
 
 // The process object is a global that provides information about, and control over, the current Node. js process. As a
