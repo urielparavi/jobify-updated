@@ -2,25 +2,12 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
 import morgan from 'morgan';
+import { nanoid } from 'nanoid';
 
-// const getData = async () => {
-
-// };
-// getData();
-
-// try {
-//   const response = await fetch(
-//     'https://www.course-api.com/react-useReducer-cart-project'
-//   );
-//   const cardData = await response.json();
-//   console.log(cardData);
-// } catch (error) {
-//   console.log(error);
-// }
-
-// fetch('https://www.course-api.com/react-useReducer-cart-project')
-//   .then((res) => res.json())
-//   .then((data) => console.log(data));
+let jobs = [
+  { id: nanoid(), company: 'apple', position: 'front-end' },
+  { id: nanoid(), company: 'google', position: 'back-end' },
+];
 
 const app = express();
 
@@ -45,6 +32,10 @@ app.get('/', (req, res) => {
 app.post('/', (req, res) => {
   // console.log(req);
   res.json({ message: 'data received', data: req.body });
+});
+
+app.get('/api/v1/jobs', (req, res) => {
+  res.status(200).json({ jobs });
 });
 
 const port = process.env.PORT || 5100;
