@@ -2,6 +2,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
 import morgan from 'morgan';
+import mongoose from 'mongoose';
 
 const app = express();
 
@@ -50,6 +51,19 @@ app.use((err, req, res, next) => {
 
 const port = process.env.PORT || 5100;
 
-app.listen(port, () => {
-  console.log(`server running on PORT ${port}...`);
-});
+// Top-level-await => In our days we dont have to create function for using await, we can use it right of the gate
+// with "type": "module" in package.json without function, but we still needed to wrapped it for success and fail
+try {
+  // This note is to remember how to create a database.
+  // MONGO_URL=mongodb+srv://username:password@cluster0.d7p6t.mongodb.net/OurDBName
+  await mongoose.connect(process.env.MONGO_URL);
+  app.listen(port, () => {
+    console.log(`server running on PORT ${port}...`);
+  });
+} catch (error) {
+  console.log(error);
+  // exit(1) => So if there is an error we wanna exit and provide 1, which basically for error.
+  // Exit code 1 is used when unhandled fatal exceptions occur that were not handled.
+  // Whereas Exit code 0 is used to terminate when no more async operations are happening.
+  process.exit(1);
+}
