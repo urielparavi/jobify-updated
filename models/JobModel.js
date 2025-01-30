@@ -11,7 +11,7 @@ const jobSchema = new mongoose.Schema(
     },
     jobType: {
       type: String,
-      enum: ['tull-time', 'part-time', 'internship'],
+      enum: ['full-time', 'part-time', 'internship'],
       default: 'full-time',
     },
     jobLocation: {
@@ -19,6 +19,8 @@ const jobSchema = new mongoose.Schema(
       default: 'my city',
     },
   },
+  // So whenever we create an instance we will get createdAt, updatedAt fields, and every time we'll do something
+  // with our instance, we'll get the correct values - time/date
   { timestamps: true }
 );
 
