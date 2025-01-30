@@ -1,12 +1,5 @@
 import Job from '../models/JobModel.js';
 
-import { nanoid } from 'nanoid';
-
-let jobs = [
-  { id: nanoid(), company: 'apple', position: 'front-end' },
-  { id: nanoid(), company: 'google', position: 'back-end' },
-];
-
 // GET ALL JOBS
 export const getAllJobs = async (req, res) => {
   const jobs = await Job.find({});
@@ -38,36 +31,30 @@ export const getJob = async (req, res) => {
 
 // EDIT JOB
 export const updateJob = async (req, res) => {
-  const { company, position } = req.body;
-  if (!company || !position) {
-    return res.status(400).json({ msg: 'please provide company and position' });
-  }
-
   const { id } = req.params;
-  const job = jobs.find((job) => job.id === id);
-  if (!job) {
+
+  const updatedJob = await Job.findOneAndUpdate(id, req.body, {
+    // To get the new update job and not the old one
+    new: true,
+  });
+
+  if (!updatedJob) {
     return res.status(404).json({ msg: `no job with id ${id}` });
   }
-  // So we define our company and position in the job that we finded in our DB to be the company and the position
-  // that coming from our req.body
-  job.company = company;
-  job.position = position;
-  res.status(200).json({ msg: 'job modified', job });
+
+  res.status(200).json({ msg: 'job modified', job: updatedJob });
 };
 
 // DELETE JOB
 export const deleteJob = async (req, res) => {
   const { id } = req.params;
 
-  const job = jobs.find((job) => job.id === id);
+  const removedJob = await Job.findByIdAndDelete(id);
+  // console.log(removedJob);
 
-  if (!job) {
+  if (!removedJob) {
     return res.status(404).json({ msg: `no job with id ${id}` });
   }
 
-  // So we kepping all the jobs with id that doesn't match to our id from req.params, and filtering out our job with the id
-  // that do match to our id that coming from req.params
-  const newJobs = jobs.filter((job) => job.id !== id);
-  jobs = newJobs;
-  res.status(200).json({ msg: 'job deleted' });
+  res.status(200).json({ msg: 'job deleted', job: removedJob });
 };
