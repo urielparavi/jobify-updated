@@ -9,6 +9,7 @@ let jobs = [
 
 // GET ALL JOBS
 export const getAllJobs = async (req, res) => {
+  const jobs = await Job.find({});
   res.status(200).json({ jobs });
 };
 
@@ -18,14 +19,17 @@ export const createJob = async (req, res) => {
   // asynchronous functions. It catches unhandled errors inside async/await functions and forwards them to Express.js's error
   // handling middleware, preventing the Node.js process from crashing. It simplifies error handling in Express.js applications
   // by allowing you to write asynchronous code without worrying about manually catching and forwarding errors.
-  const job = await Job.create('testString');
+  const job = await Job.create(req.body);
   res.status(201).json({ job });
 };
 
 // GET SINGLE JOB
 export const getJob = async (req, res) => {
   const { id } = req.params;
-  const job = jobs.find((job) => job.id === id);
+
+  const job = await Job.findById(id);
+  console.log(job);
+
   if (!job) {
     return res.status(404).json({ msg: `no job with id ${id}` });
   }
