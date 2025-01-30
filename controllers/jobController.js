@@ -14,8 +14,11 @@ export const getAllJobs = async (req, res) => {
 
 // CREATE JOB
 export const createJob = async (req, res) => {
-  // const { company, position } = req.body;
-  const job = await Job.create(req.body);
+  // express-async-errors => We using this package - Express.js middleware that helps handle errors that occur within
+  // asynchronous functions. It catches unhandled errors inside async/await functions and forwards them to Express.js's error
+  // handling middleware, preventing the Node.js process from crashing. It simplifies error handling in Express.js applications
+  // by allowing you to write asynchronous code without worrying about manually catching and forwarding errors.
+  const job = await Job.create('testString');
   res.status(201).json({ job });
 };
 
