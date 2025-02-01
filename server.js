@@ -10,6 +10,9 @@ const app = express();
 // routers
 import jobRouter from './routes/jobRouter.js';
 
+// middleware
+import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
+
 // The process object is a global that provides information about, and control over, the current Node. js process. As a
 // global, it is always available to Node. js applications without using require() and inside of him we have
 // the env object that has different environment variables and we can also sets new ones there, so with dotenv we could
@@ -45,10 +48,7 @@ app.use('*', (req, res) => {
 // So this middleware for Programming or other unknown error like a typo, forgetting async, await, some bugs and so on,
 // and also for operational, trusted error and in this case the throw new Error() in some controller will activate
 // this middleware from our response - for example if there is no job/id, not filling a certain field and we throw new Error()
-app.use((err, req, res, next) => {
-  console.log(err);
-  res.status(500).json({ msg: 'something went wrong' });
-});
+app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 5100;
 
