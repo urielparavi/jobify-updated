@@ -3,6 +3,7 @@ import { BadRequestError, NotFoundError } from '../errors/customErrors.js';
 import { JOB_STATUS, JOB_TYPE } from '../utils/constants.js';
 import mongoose from 'mongoose';
 import Job from '../models/JobModel.js';
+import User from '../models/UserModel.js';
 
 const withValidationErrors = (validateValues) => {
   // In express if we have multiple middleware, we grouping them together by set up an array, so it's not express validator
@@ -44,6 +45,7 @@ export const validateIdParam = withValidationErrors([
     // So if it's a true, that mean that our id is with pattern of ObjectId/mongoDBId, and if it's not, that mean that the id
     // is not with pattern of ObjectId/mongoDBId. So if it's mongoDBId it will pass to the next middleware to the controller,
     // but still the mongoDBId could fail in the controller if the mongoDBId is not found, and then we throw the NotFoundError()
+    // value => the value from the function will be the actual id from the param('id)
     .custom(async (value) => {
       const isValidMongoId = mongoose.Types.ObjectId.isValid(value);
       // We also can use the class Error that built in JS because the actualy class will be from errorMessages in the
@@ -57,4 +59,28 @@ export const validateIdParam = withValidationErrors([
       // so, the 500 statusCode, and "somthing went wrong..."
       if (!job) throw new NotFoundError(`no job with id ${value}`);
     }),
+]);
+
+export const validateRegisterInput = withValidationErrors([
+  body('name').notEmpty().withMessage('name is required'),
+  body('email')
+    .notEmpty()
+    .withMessage('email is required')
+    .isEmail()
+    .withMessage('invalid email format')
+    // value => the value from the function will be the actual email from the body('email')
+    .custom(async (email) => {
+      // So we search the email that come from our body in DB
+      const user = await User.findOne({ email });
+      if (user) {
+        throw new BadRequestError('email already exists');
+      }
+    }),
+  body('password')
+    .notEmpty()
+    .withMessage('password is required')
+    .isLength({ min: 8 })
+    .withMessage('password must be at least 8 characters long'),
+  body('location').notEmpty().withMessage('location is required'),
+  body('lastName').notEmpty().withMessage('last name is required'),
 ]);
