@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 import User from '../models/UserModel.js';
-import bcrypt from 'bcryptjs';
+import { hashPassword } from '../utils/passwordUtils.js';
 
 export const register = async (req, res) => {
   // So only the user with the first account/document will be the admin, so if a document/s /account/s already exists,
@@ -8,9 +8,7 @@ export const register = async (req, res) => {
   const isFirstAccount = (await User.countDocuments()) === 0;
   req.body.role = isFirstAccount ? 'admin' : 'user';
 
-  // genSalt() => creates a random value that going to be added to the password before hashing and the number is the strength
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(req.body.password, salt);
+  const hashedPassword = await hashPassword(req.body.password);
   // So essentially we overriding req.body.password - first we grab the req.body.password to get the hashed version
   // and then it's going to be the hashed password
   req.body.password = hashedPassword; // test1234 => $2a$10$kgz1zrmt43JS04nmEP7EZuJyWgrid9gcrCg/NQfP5UasCT
