@@ -32,5 +32,18 @@ export const login = async (req, res) => {
 
   const token = createJWT({ userId: user._id, role: user.role });
 
-  res.json({ token });
+  const oneDay = 1000 * 60 * 60 * 24;
+
+  res.cookie('token', token, {
+    // An HTTP-only cookie is a cookie that can't be accessed by JavaScript running in the browser. It is designed to help
+    // prevent cross-site scripting (XSS) attacks, which can be used to steal cookies and other sensitive information.
+    httpOnly: true,
+    // We need to provide this time in milliseconds
+    expires: new Date(Date.now() + oneDay),
+    // secure: true => Meaning that the cookie can be only transmitted over HTTPS protocol
+    // Since we developing, we set the secure property to true only in production, so that in development we will
+    // still can transmit the cookie in HTTP protocol
+    secure: process.env.NODE_ENV === 'production',
+  });
+  res.status(StatusCodes.OK).json({ msg: 'user logged in' });
 };
