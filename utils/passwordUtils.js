@@ -6,3 +6,10 @@ export const hashPassword = async (password) => {
   const hashedPassword = await bcrypt.hash(password, salt);
   return hashedPassword;
 };
+
+// password => the password from req.body. hashedPassword => the password from the DB
+export const comparePassword = async (password, hashedPassword) => {
+  // We compare the encrypted versions
+  const isMatch = await bcrypt.compare(password, hashedPassword);
+  return isMatch;
+};

@@ -1,6 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import User from '../models/UserModel.js';
-import { hashPassword } from '../utils/passwordUtils.js';
+import { comparePassword, hashPassword } from '../utils/passwordUtils.js';
+import { UnauthenticatedError } from '../errors/customErrors.js';
 
 export const register = async (req, res) => {
   // So only the user with the first account/document will be the admin, so if a document/s /account/s already exists,
@@ -19,5 +20,14 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
+  // So only if we find the email of the user in our DB, the user will be exist/true
+  const user = await User.findOne({ email: req.body.email });
+
+  const isValidUser =
+    // user.password => Since only if user will be true we will continue to compare his password,
+    // so at this point we know his password will exist in our user
+    user && (await comparePassword(req.body.password, user.password));
+  if (!isValidUser) throw new UnauthenticatedError('invalid credentials');
+
   res.send('login');
 };
