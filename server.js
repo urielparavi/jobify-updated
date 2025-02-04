@@ -13,6 +13,7 @@ import authRouter from './routes/authRouter.js';
 
 // middleware
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
+import { authenticateUser } from './middleware/authMiddleware.js';
 
 // The process object is a global that provides information about, and control over, the current Node. js process. As a
 // global, it is always available to Node. js applications without using require() and inside of him we have
@@ -32,7 +33,7 @@ app.get('/', (req, res) => {
   res.send('Hello world');
 });
 
-app.use('/api/v1/jobs', jobRouter);
+app.use('/api/v1/jobs', authenticateUser, jobRouter);
 app.use('/api/v1/auth', authRouter);
 
 // NOT FOUND REQUEST MIDDLEWARE

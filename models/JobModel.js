@@ -19,6 +19,11 @@ const jobSchema = new mongoose.Schema(
       type: String,
       default: 'my city',
     },
+    createdBy: {
+      // So the value will be MongoID, and the referece will be to the user that create it from the User collection
+      type: mongoose.Types.ObjectId,
+      ref: 'User',
+    },
   },
   // So whenever we create an instance we will get createdAt, updatedAt fields, and every time we'll do something
   // with our instance, we'll get the correct values - time/date
