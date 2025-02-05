@@ -3,8 +3,8 @@ import { StatusCodes } from 'http-status-codes';
 
 // GET ALL JOBS
 export const getAllJobs = async (req, res) => {
-  console.log(req.user);
-  const jobs = await Job.find({});
+  // console.log(req.user); // => { userId: '67a310c7ef650f7eb42c7d9b', role: 'admin' }
+  const jobs = await Job.find({ createdBy: req.user.userId });
   res.status(StatusCodes.OK).json({ jobs });
 };
 
@@ -14,6 +14,10 @@ export const createJob = async (req, res) => {
   // asynchronous functions. It catches unhandled errors inside async/await functions and forwards them to Express.js's error
   // handling middleware, preventing the Node.js process from crashing. It simplifies error handling in Express.js applications
   // by allowing you to write asynchronous code without worrying about manually catching and forwarding errors.
+
+  // Since the Job Model looking for createdBy property, we can attaching it and set it to the userId that we have
+  // from our user property from our req.user
+  req.body.createdBy = req.user.userId;
   const job = await Job.create(req.body);
   res.status(StatusCodes.CREATED).json({ job });
 };
