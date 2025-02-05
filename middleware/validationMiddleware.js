@@ -1,5 +1,9 @@
 import { body, validationResult, param } from 'express-validator';
-import { BadRequestError, NotFoundError } from '../errors/customErrors.js';
+import {
+  BadRequestError,
+  NotFoundError,
+  UnauthorizedError,
+} from '../errors/customErrors.js';
 import { JOB_STATUS, JOB_TYPE } from '../utils/constants.js';
 import mongoose from 'mongoose';
 import Job from '../models/JobModel.js';
@@ -20,6 +24,9 @@ const withValidationErrors = (validateValues) => {
         // there's only going to be one
         if (errorMessages[0].startsWith('no job')) {
           throw new NotFoundError(errorMessages);
+        }
+        if (errorMessages[0].startsWith('not authorized')) {
+          throw new UnauthorizedError('not authorized to access this route');
         }
         throw new BadRequestError(errorMessages);
       }
@@ -46,7 +53,7 @@ export const validateIdParam = withValidationErrors([
     // is not with pattern of ObjectId/mongoDBId. So if it's mongoDBId it will pass to the next middleware to the controller,
     // but still the mongoDBId could fail in the controller if the mongoDBId is not found, and then we throw the NotFoundError()
     // value => the value from the function will be the actual id from the param('id)
-    .custom(async (value) => {
+    .custom(async (value, { req }) => {
       const isValidMongoId = mongoose.Types.ObjectId.isValid(value);
       // We also can use the class Error that built in JS because the actualy class will be from errorMessages in the
       // second middleware, and is also applies to our NotFoundError class down
@@ -58,6 +65,17 @@ export const validateIdParam = withValidationErrors([
       // the message and the statusCode successfully it will be them, otherwise it be our default generic message, statusCode
       // so, the 500 statusCode, and "somthing went wrong..."
       if (!job) throw new NotFoundError(`no job with id ${value}`);
+
+      // console.log(req.user);
+      // console.log(job);
+
+      const isAdmin = req.user.role === 'admin';
+      // Since createdBy not a string and the userId it is, we change it to string
+      const isOwner = req.user.userId === job.createdBy.toString();
+      // So if the user is the owner or the amdin, he will get access to the jobs, and if he not the owner
+      // he will not get access the jobs that don't belong to him, except the admin
+      if (!isAdmin && !isOwner)
+        throw new UnauthorizedError('not authorized to access this route');
     }),
 ]);
 
