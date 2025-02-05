@@ -4,6 +4,7 @@ dotenv.config();
 import express from 'express';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
@@ -25,7 +26,12 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-// Because our data from the frontend come as a json data, so to accept it, we need a Body parser to reading data
+// cookie-parser is middleware that simplifies handling cookies. It parses incoming cookies from client requests and makes them
+// accessible in the req.cookies object. This makes it easier to read and manipulate cookies in Express JS application
+// without manual parsing.
+app.use(cookieParser());
+
+// Because our data from the frontend come as a json data, so to accept it, we need a Body parser middleware to reading data
 // from body into req.body
 app.use(express.json());
 
