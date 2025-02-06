@@ -19,5 +19,12 @@ export const getApplicationStats = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
+  const obj = { ...req.body };
+  // So we make sure that if the user add the password property  in the body and try to update his password,
+  // we deleting it, and  then we will give him his body object without his password, so we filtering it
+  // therefore it will update in DB from the get go, and also he will get his object without his password
+  delete obj.password;
+  console.log(obj);
+  const updatedUser = await User.findByIdAndUpdate(req.user.userId, obj);
   res.status(StatusCodes.OK).json({ msg: 'update user' });
 };

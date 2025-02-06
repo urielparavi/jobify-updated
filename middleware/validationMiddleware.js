@@ -115,3 +115,25 @@ export const validateLoginInput = withValidationErrors([
     .isLength({ min: 8 })
     .withMessage('password must be at least 8 characters long'),
 ]);
+
+export const validateUpdateUserInput = withValidationErrors([
+  body('name').notEmpty().withMessage('name is required'),
+  body('email')
+    .notEmpty()
+    .withMessage('email is required')
+    .isEmail()
+    .withMessage('invalid email format')
+    // value => the value from the function will be the actual email from the body('email')
+    .custom(async (email, { req }) => {
+      // So we search the email that come from our body in DB
+      const user = await User.findOne({ email });
+      // We check if user exist but also if the user is not us, because obvious that if we check only by the user,
+      // it will find our email and we know that is exist already, therfore we wanna check that the email is not our
+      // because that mean that this email was taken by another user, and this the exactly the check that we want
+      if (user && user._id.toString() !== req.user.userId) {
+        throw new BadRequestError('email already exists');
+      }
+    }),
+  body('location').notEmpty().withMessage('location is required'),
+  body('lastName').notEmpty().withMessage('last name is required'),
+]);
