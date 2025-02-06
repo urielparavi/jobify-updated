@@ -48,3 +48,13 @@ export const login = async (req, res) => {
   });
   res.status(StatusCodes.OK).json({ msg: 'user logged in' });
 };
+
+// We create the cookie with the same key name for clear our cookie by Date.now(). As far as the value, it's not matter
+// realy what is it
+export const logout = (req, res) => {
+  res.cookie('token', 'logout', {
+    httpOnly: true,
+    expires: new Date(Date.now()),
+  });
+  res.status(StatusCodes.OK).json({ msg: 'user logged out!' });
+};
