@@ -15,7 +15,10 @@ export const getCurrentUser = async (req, res) => {
 };
 
 export const getApplicationStats = async (req, res) => {
-  res.status(StatusCodes.OK).json({ msg: 'application stats' });
+  const users = await User.countDocuments();
+  const jobs = await Job.countDocuments();
+
+  res.status(StatusCodes.OK).json({ users, jobs });
 };
 
 export const updateUser = async (req, res) => {
@@ -24,7 +27,7 @@ export const updateUser = async (req, res) => {
   // we deleting it, and  then we will give him his body object without his password, so we filtering it
   // therefore it will update in DB from the get go, and also he will get his object without his password
   delete obj.password;
-  console.log(obj);
+  // console.log(obj);
   const updatedUser = await User.findByIdAndUpdate(req.user.userId, obj);
   res.status(StatusCodes.OK).json({ msg: 'update user' });
 };
