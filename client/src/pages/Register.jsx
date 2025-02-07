@@ -1,11 +1,19 @@
-import { Link } from 'react-router-dom';
+import { Form, redirect, useNavigation, Link } from 'react-router-dom';
 import Wrapper from '../assets/wrappers/RegisterAndLoginPage';
 import { FormRow, Logo } from '../components';
+
+// Every time that we using this function we need to return some value from it - no matter what it is,
+// it could be null, but it need to return something
+export const action = async ({ data }) => {
+  console.log(data);
+  return null;
+};
 
 const Register = () => {
   return (
     <Wrapper>
-      <form className="form">
+      {/* Form => Component that coming from React router dom. it's still going to be regular form that get CSS end other elements normally, but it also able to use the action function */}
+      <Form method="post" className="form">
         <Logo />
         <h4>Register</h4>
         <FormRow type="text" name="name" defaultValue="john" />
@@ -27,7 +35,7 @@ const Register = () => {
             Login
           </Link>
         </p>
-      </form>
+      </Form>
     </Wrapper>
   );
 };

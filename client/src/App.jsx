@@ -14,6 +14,8 @@ import {
   Admin,
 } from './pages';
 
+import { action as registerAction } from './pages/Register';
+
 // We set up this here, so if it true it's going to be added to all of the pages, so this function run when our application load
 export const checkDefaultTheme = () => {
   // We checking in localStorage if darkTheme property exist, and if it is, it will be true and if it's not it will be
@@ -42,6 +44,9 @@ const router = createBrowserRouter([
       {
         path: 'register',
         element: <Register />,
+        // action => Function which allow us to handle the form submission, and every time that we'll submit the form,
+        // we will invoke this function
+        action: registerAction,
       },
       {
         path: 'login',
