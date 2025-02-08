@@ -23,6 +23,10 @@ export const action = async ({ request }) => {
 };
 
 const Register = () => {
+  const navigation = useNavigation();
+  console.log(navigation);
+  const isSubmitting = navigation.state === 'submitting';
+
   return (
     <Wrapper>
       {/* Form => Component that coming from React router dom. it's still going to be regular form that get CSS end other elements normally, but it also able to use the action function */}
@@ -40,8 +44,8 @@ const Register = () => {
         <FormRow type="text" name="location" defaultValue="london" />
         <FormRow type="email" name="email" defaultValue="test@example.com" />
         <FormRow type="password" name="password" defaultValue="test1234" />
-        <button type="submit" className="btn btn-block">
-          submit
+        <button type="submit" className="btn btn-block" disabled={isSubmitting}>
+          {isSubmitting ? 'submitting...' : 'submit'}
         </button>
         <p>
           Already a member?
