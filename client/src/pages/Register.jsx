@@ -2,6 +2,7 @@ import { Form, redirect, useNavigation, Link } from 'react-router-dom';
 import Wrapper from '../assets/wrappers/RegisterAndLoginPage';
 import { FormRow, Logo } from '../components';
 import customFetch from '../utils/customFetch';
+import { toast } from 'react-toastify';
 
 // Every time that we using this function we need to return some value from it - no matter what it is,
 // it could be null, but it need to return something
@@ -15,16 +16,18 @@ export const action = async ({ request }) => {
   try {
     // .post(http://localhost:5100/api/v1/auth/register)
     await customFetch.post('/auth/register', data);
+    toast.success('Registration successful');
     return redirect('/login');
   } catch (error) {
-    console.log(error);
+    // console.log(error);
+    toast.error(error?.response?.data?.msg);
     return error;
   }
 };
 
 const Register = () => {
   const navigation = useNavigation();
-  console.log(navigation);
+  // console.log(navigation);
   const isSubmitting = navigation.state === 'submitting';
 
   return (
