@@ -1,4 +1,10 @@
-import { Link, Form, redirect, useNavigation } from 'react-router-dom';
+import {
+  Link,
+  Form,
+  redirect,
+  useNavigation,
+  useActionData,
+} from 'react-router-dom';
 import Wrapper from '../assets/wrappers/RegisterAndLoginPage';
 import { FormRow, Logo } from '../components';
 import customFetch from '../utils/customFetch';
@@ -9,17 +15,32 @@ export const action = async ({ request }) => {
   // Object.fromEntries() => turns array of arrays into an object
   const data = Object.fromEntries(formData);
   // console.log(data);// => { email: 'test@example.com', password: 'test1234' }
+  const errors = { msg: '' };
+  if (data.password.length < 3) {
+    errors.msg = 'password too short';
+    return errors;
+  }
   try {
     await customFetch.post('/auth/login', data);
     toast.success('Login successful');
     return redirect('/dashboard');
   } catch (error) {
-    toast.error(error?.response?.data?.msg);
-    return error;
+    // toast.error(error?.response?.data?.msg);
+    errors.msg = error?.response?.data?.msg;
+    return errors;
   }
 };
 
 const Login = () => {
+  // useActionData(); => Returns the data from the most recent route action or undefined if there isn't one.
+  // This hook only returns action data from the route in context - it can not access data from other parent or child routes.
+  // So in our example we assign the errors for useActionData but it could be any type of data that we assigned
+  //  from the recent action
+  const errors = useActionData();
+  // So when our component mount, or when our data sent successfully, our errors will be undefined, and whenever that will be
+  // errors they will show up like this - {msg: 'invalid credentials'}
+  // console.log(errors);
+
   const navigation = useNavigation();
   const isSubmitting = navigation.state === 'submitting';
 
@@ -28,6 +49,7 @@ const Login = () => {
       <Form method="post" className="form">
         <Logo />
         <h4>login</h4>
+        {errors?.msg && <p style={{ color: 'red' }}>{errors.msg}</p>}
         <FormRow type="email" name="email" defaultValue="admin@example.com" />
         <FormRow type="password" name="password" defaultValue="test1234" />
         <button type="submit" className="btn btn-block" disabled={isSubmitting}>
