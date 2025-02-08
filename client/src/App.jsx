@@ -15,6 +15,7 @@ import {
 } from './pages';
 
 import { action as registerAction } from './pages/Register';
+import { action as loginAction } from './pages/Login';
 
 // We set up this here, so if it true it's going to be added to all of the pages, so this function run when our application load
 export const checkDefaultTheme = () => {
@@ -51,6 +52,7 @@ const router = createBrowserRouter([
       {
         path: 'login',
         element: <Login />,
+        action: loginAction,
       },
       {
         path: 'dashboard',
