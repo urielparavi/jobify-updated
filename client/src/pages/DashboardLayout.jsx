@@ -1,9 +1,10 @@
-import { Outlet, redirect, useLoaderData } from 'react-router-dom';
+import { Outlet, redirect, useLoaderData, useNavigate } from 'react-router-dom';
 import Wrapper from '../assets/wrappers/Dashboard';
 import { createContext, useContext, useState } from 'react';
 import { BigSidebar, Navbar, SmallSidebar } from '../components';
 import { checkDefaultTheme } from '../App';
 import customFetch from '../utils/customFetch';
+import { toast } from 'react-toastify';
 
 //
 export const loader = async () => {
@@ -11,6 +12,9 @@ export const loader = async () => {
     const { data } = await customFetch.get('/users/current-user');
     return data;
   } catch (error) {
+    // The difference between *redirect* and *navigate* - redirect is used in actions and loaders,
+    // And useNavigate is a hook and it can only be used in React Hooks and React Components.
+
     // If we don't succeed to get the user, it's mean that we have any issue with JWT, so the user will have to repeat
     // the login step
     return redirect('/');
@@ -24,7 +28,8 @@ const DashboardLayout = () => {
   // available right away, so not like useEffect that the data was available after the component rendered, here it will
   // be available immediately before the component redered
   const { user } = useLoaderData();
-  console.log(user);
+  // console.log(user);
+  const navigate = useNavigate();
 
   const [showSidebar, setShowSidebar] = useState(false);
   // So if user enabled a darkTheme and exist etc, we save him his darkTheme as a default state
@@ -49,7 +54,9 @@ const DashboardLayout = () => {
   };
 
   const logoutUser = async () => {
-    console.log('logout user');
+    navigate('/');
+    await customFetch.get('/auth/logout');
+    toast.success('Logging out...');
   };
 
   return (
