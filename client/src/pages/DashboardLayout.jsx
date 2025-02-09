@@ -29,6 +29,7 @@ const DashboardLayout = () => {
   // be available immediately before the component redered
   const { user } = useLoaderData();
   // console.log(user);
+  // The data that our user return => { _id: value ,email: value, lastName: value, location: value, name: value, role: value }
   const navigate = useNavigate();
 
   const [showSidebar, setShowSidebar] = useState(false);
