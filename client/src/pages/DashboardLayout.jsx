@@ -3,10 +3,18 @@ import Wrapper from '../assets/wrappers/Dashboard';
 import { createContext, useContext, useState } from 'react';
 import { BigSidebar, Navbar, SmallSidebar } from '../components';
 import { checkDefaultTheme } from '../App';
+import customFetch from '../utils/customFetch';
 
 //
-export const loader = () => {
-  return 'hello world';
+export const loader = async () => {
+  try {
+    const { data } = await customFetch.get('/users/current-user');
+    return data;
+  } catch (error) {
+    // If we don't succeed to get the user, it's mean that we have any issue with JWT, so the user will have to repeat
+    // the login step
+    return redirect('/');
+  }
 };
 
 const DashboardContext = createContext();
@@ -15,11 +23,9 @@ const DashboardLayout = () => {
   // So the userLoaderData give us access to what we have in the loader function in our component, and the data will be
   // available right away, so not like useEffect that the data was available after the component rendered, here it will
   // be available immediately before the component redered
-  const data = useLoaderData();
-  console.log(data);
+  const { user } = useLoaderData();
+  console.log(user);
 
-  // temp
-  const user = { name: 'john' };
   const [showSidebar, setShowSidebar] = useState(false);
   // So if user enabled a darkTheme and exist etc, we save him his darkTheme as a default state
 
@@ -64,7 +70,9 @@ const DashboardLayout = () => {
           <div>
             <Navbar />
             <div className="dashboard-page">
-              <Outlet />
+              {/*context => special prop that we can leverage to inject props into Outlet, making them accessible to all its child components */}
+              {/* So we pass our user through the context prop to all the pages/components that are inside of those page, so the children of the DashboardLyaout - addJob, Stats, AllJobs, Profile, Admin */}
+              <Outlet context={{ user }} />
             </div>
           </div>
         </main>
