@@ -16,6 +16,7 @@ import {
 
 import { action as registerAction } from './pages/Register';
 import { action as loginAction } from './pages/Login';
+import { loader as dashboardLoader } from './pages/DashboardLayout';
 
 // We set up this here, so if it true it's going to be added to all of the pages, so this function run when our application load
 export const checkDefaultTheme = () => {
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
       {
         path: 'dashboard',
         element: <DashboardLayout />,
+        // Loaders allow us to provide data to the route before it renders, so unlike the useEffect that the component
+        // mounts and then we fetch all the data after the component rendered. In this case we'll provide the data
+        // right away, so it's pre fetching the data before the component renders
+        loader: dashboardLoader,
         children: [
           {
             index: true,

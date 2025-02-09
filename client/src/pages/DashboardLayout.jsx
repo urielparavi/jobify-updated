@@ -1,12 +1,23 @@
-import { createContext, useContext, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, redirect, useLoaderData } from 'react-router-dom';
 import Wrapper from '../assets/wrappers/Dashboard';
+import { createContext, useContext, useState } from 'react';
 import { BigSidebar, Navbar, SmallSidebar } from '../components';
 import { checkDefaultTheme } from '../App';
+
+//
+export const loader = () => {
+  return 'hello world';
+};
 
 const DashboardContext = createContext();
 
 const DashboardLayout = () => {
+  // So the userLoaderData give us access to what we have in the loader function in our component, and the data will be
+  // available right away, so not like useEffect that the data was available after the component rendered, here it will
+  // be available immediately before the component redered
+  const data = useLoaderData();
+  console.log(data);
+
   // temp
   const user = { name: 'john' };
   const [showSidebar, setShowSidebar] = useState(false);
