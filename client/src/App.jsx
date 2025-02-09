@@ -17,6 +17,7 @@ import {
 import { action as registerAction } from './pages/Register';
 import { action as loginAction } from './pages/Login';
 import { loader as dashboardLoader } from './pages/DashboardLayout';
+import { action as addJobAction } from './pages/AddJob';
 
 // We set up this here, so if it true it's going to be added to all of the pages, so this function run when our application load
 export const checkDefaultTheme = () => {
@@ -66,6 +67,7 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <AddJob />,
+            action: addJobAction,
           },
           {
             path: 'stats',

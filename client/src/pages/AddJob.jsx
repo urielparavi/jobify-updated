@@ -6,6 +6,23 @@ import { Form, useNavigation, redirect } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import customFetch from '../utils/customFetch';
 
+export const action = async ({ request }) => {
+  const formData = await request.formData();
+  // console.log(formData);
+
+  const data = Object.fromEntries(formData);
+  console.log(data);
+
+  try {
+    await customFetch.post('/jobs', data);
+    toast.success('Job added successfully');
+    return redirect('all-jobs');
+  } catch (error) {
+    toast.error(error?.response?.data?.msg);
+    return error;
+  }
+};
+
 const AddJob = () => {
   // We pull out our user from the Outlet compoent that we pass with the context props from the DashboardLayout parent
   const { user } = useOutletContext();
