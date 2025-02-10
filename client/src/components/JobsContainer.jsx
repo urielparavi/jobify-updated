@@ -8,7 +8,7 @@ const JobsContainer = () => {
   // Here we destructure our jobs array out from the object, so we can loop over him
   const { jobs } = data;
 
-  console.log(jobs);
+  // console.log(jobs);
 
   if (jobs.length === 0) {
     return (
