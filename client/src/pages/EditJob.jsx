@@ -19,8 +19,20 @@ export const loader = async ({ params }) => {
   }
 };
 
-export const action = async () => {
-  return null;
+// So we need the request for all the input values, and the params for the endpoint in our server
+export const action = async ({ request, params }) => {
+  const formData = await request.formData();
+  const data = Object.fromEntries(formData);
+  // console.log(data);
+
+  try {
+    await customFetch.patch(`/jobs/${params.id}`, data);
+    toast.success('Job edited successfully');
+    return redirect('/dashboard/all-jobs');
+  } catch (error) {
+    toast.error(error?.response?.data?.msg);
+    return error;
+  }
 };
 
 const EditJob = () => {
