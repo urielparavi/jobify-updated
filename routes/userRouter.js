@@ -12,7 +12,7 @@ const router = Router();
 router.get('/current-user', getCurrentUser);
 // [] => In express we can group together multiple middlewares just by adding square brackets
 router.get('/admin/app-stats', [
-  authorizePermissions('admin'),
+  authorizePermissions('admin', 'user'),
   getApplicationStats,
 ]);
 router.patch('/update-user', validateUpdateUserInput, updateUser);
