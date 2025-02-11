@@ -11,7 +11,7 @@ export const action = async ({ request }) => {
   // console.log(formData);
 
   const data = Object.fromEntries(formData);
-  console.log(data);
+  // console.log(data);
 
   try {
     await customFetch.post('/jobs', data);

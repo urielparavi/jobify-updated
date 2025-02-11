@@ -41,7 +41,9 @@ const Job = ({
           <Link to={`../edit-job/${_id}`} className="btn edit-btn">
             Edit
           </Link>
-          <Form>
+          {/* Since is going to be delete functionality we need to go with post method */}
+          {/* action => We provide where that functionality is going to be handled. So in all our other examples, the edit job, add job etc, we were not provided this action, because that we want the default behavior - that the action will be sent back to the same page, so the current page handle it and send the form. But here we want to send it to delete-job route to handle it */}
+          <Form method="post" action={`../delete-job/${_id}`}>
             <button type="submit" className="btn delete-btn">
               Delete
             </button>
