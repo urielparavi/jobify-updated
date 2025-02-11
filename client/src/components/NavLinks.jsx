@@ -9,6 +9,12 @@ const NavLinks = ({ isBigSidebar }) => {
     <div className="nav-links">
       {links.map((link) => {
         const { text, path, icon } = link;
+        const { role } = user;
+
+        // So if the path equale to admin, it mean that the nav link is the admin link. So if the admin link exist but
+        //  user not have role of admin, he will not see the admin link in the navbar
+        if (path === 'admin' && role !== 'admin') return;
+        // console.log(path);
         return (
           <NavLink
             to={path}
