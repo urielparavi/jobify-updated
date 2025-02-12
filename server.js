@@ -13,10 +13,18 @@ import jobRouter from './routes/jobRouter.js';
 import authRouter from './routes/authRouter.js';
 import userRouter from './routes/userRouter.js';
 
+// public
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import path from 'path';
+
 // middleware
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
 import { authenticateUser } from './middleware/authMiddleware.js';
 
+// Because we work with ES6 and not with Common JS syntax, we need to set up our __dirname which points to the
+// current folder, because when it will go to production will be there different enviroments
+const __dirname = dirname(fileURLToPath(import.meta.url));
 // The process object is a global that provides information about, and control over, the current Node. js process. As a
 // global, it is always available to Node. js applications without using require() and inside of him we have
 // the env object that has different environment variables and we can also sets new ones there, so with dotenv we could
@@ -27,6 +35,24 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+// const path1 = path.join('content', 'subfolder', 'test.txt');
+// console.log(path1); // => content\subfolder\test.txt
+
+// const path2 = path.resolve('content', 'sobfolder', 'test.txt');
+// console.log(path2); // =>  C:\Coding\jobify\content\sobfolder\test.txt
+
+// const path3 = path.join(__dirname, './public');
+// console.log(path3); // =>  C:\Coding\jobify\public
+
+// const path4 = path.resolve(__dirname, './public');
+// console.log(path4); // =>  C:\Coding\jobify\public
+
+// Serving static files in the public folder
+// Static files => they are static files that will remain the same thing in every request like fiveicon, CSS, JS, images etc,
+// and they are sitting in our file system and we cannot access them using our routes. So express will try to find route
+// for this URL and if it will not find, it will go to the public folder,
+// and for access to them and serve our static files we need to use a built-in middleware express.static(...)
+app.use(express.static(path.resolve(__dirname, './public')));
 // cookie-parser is middleware that simplifies handling cookies. It parses incoming cookies from client requests and makes them
 // accessible in the req.cookies object. This makes it easier to read and manipulate cookies in Express JS application
 // without manual parsing.
