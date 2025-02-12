@@ -9,6 +9,8 @@ import { toast } from 'react-toastify';
 //
 export const loader = async () => {
   try {
+    // Side note: since we are doing this request in the DashboardLayout, everty time that this component render,
+    // we will do this get request, even if is children renders we will fetch our current user
     const { data } = await customFetch.get('/users/current-user');
     return data;
   } catch (error) {

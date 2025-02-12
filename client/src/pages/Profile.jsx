@@ -5,6 +5,28 @@ import { useNavigation, Form } from 'react-router-dom';
 import customFetch from '../utils/customFetch';
 import { toast } from 'react-toastify';
 
+export const action = async ({ request }) => {
+  const formData = await request.formData();
+  // avatar => the name attribute
+  const file = formData.get('avatar');
+
+  // So if the file present, meaning that he inserted an image, and in that case we wanna check the size,
+  // because we not allowing file that bigger then 0.5 MB
+  if (file && file.size > 500000) {
+    toast.error('Image size to large');
+    return null;
+  }
+  try {
+    // Because we sending file we send the formData to our endpoint in server and not the data as before
+    await customFetch.patch('/users/update-user', formData);
+    toast.success('Profile updated successfully');
+  } catch (error) {
+    toast.error(error?.response?.data?.msg);
+  }
+  // Whether if we succeed or not, we wanna return null because we wanna stay on profile page as we where
+  return null;
+};
+
 const Profile = () => {
   const { user } = useOutletContext();
   const { name, lastName, email, location } = user;
@@ -13,6 +35,7 @@ const Profile = () => {
 
   return (
     <Wrapper>
+      {/* When we send a file to the server the encType will be multipart/form-data because the file is binari data and not json like regular form  */}
       <Form method="post" className="form" encType="multipart/form-data">
         <h4 className="form-title">profile</h4>
         <div className="form-center">
