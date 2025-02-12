@@ -17,6 +17,8 @@ const UserSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user',
   },
+  avatar: String,
+  avatarPublicId: String,
 });
 
 // Instance methods - we get here the instance of the user. So we get back our user from any instance that we do in any
