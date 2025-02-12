@@ -5,6 +5,7 @@ import express from 'express';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
+import cloudinary from 'cloudinary';
 
 const app = express();
 
@@ -21,6 +22,17 @@ import path from 'path';
 // middleware
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
 import { authenticateUser } from './middleware/authMiddleware.js';
+
+// Cloudinary => platform where we can store, optimize and deliver images, so we will not need to store there URL
+// in our DB, and once we push it up, we'll get back the URL and now the image is going to be stored in cloudinary,
+// so it's always going to be there, and we'll just utilize that URL on the front-end,
+// Which points to the location in the cloudinary where it is stored. so as a result
+//  the image is not going to dissappear on the server in the regular way (more on README)..
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+});
 
 // Because we work with ES6 and not with Common JS syntax, we need to set up our __dirname which points to the
 // current folder, because when it will go to production will be there different enviroments

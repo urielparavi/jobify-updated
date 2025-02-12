@@ -22,6 +22,8 @@ export const getApplicationStats = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
+  console.log(req.file);
+
   const obj = { ...req.body };
   // So we make sure that if the user add the password property in the body and try to update his password,
   // we deleting it, and then we will give him his body object without his password, so we filtering it
