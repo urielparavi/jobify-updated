@@ -23,11 +23,10 @@ import path from 'path';
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
 import { authenticateUser } from './middleware/authMiddleware.js';
 
-// Cloudinary => platform where we can store, optimize and deliver images, so we will not need to store there URL
-// in our DB, and once we push it up, we'll get back the URL and now the image is going to be stored in cloudinary,
-// so it's always going to be there, and we'll just utilize that URL on the front-end,
-// Which points to the location in the cloudinary where it is stored. so as a result
-//  the image is not going to dissappear on the server in the regular way (more on README)..
+// Cloudinary => platform where we can store, optimize and deliver images, and once we push it up, we'll get back the URL and
+// now the image is going to be stored in cloudinary, so it's always going to be there, and we'll just utilize that URL on the
+// front-end, which points to the location in the cloudinary where it is stored. so as a result the image is not going
+// to dissappear on the server in the regular way (more on README)..
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.CLOUD_API_KEY,
