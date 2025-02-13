@@ -1,6 +1,6 @@
-import { Form, redirect, useNavigation, Link } from 'react-router-dom';
+import { Form, redirect, Link } from 'react-router-dom';
 import Wrapper from '../assets/wrappers/RegisterAndLoginPage';
-import { FormRow, Logo } from '../components';
+import { FormRow, Logo, SubmitBtn } from '../components';
 import customFetch from '../utils/customFetch';
 import { toast } from 'react-toastify';
 
@@ -26,10 +26,6 @@ export const action = async ({ request }) => {
 };
 
 const Register = () => {
-  const navigation = useNavigation();
-  // console.log(navigation);
-  const isSubmitting = navigation.state === 'submitting';
-
   return (
     <Wrapper>
       {/* Form => Component that coming from React router dom. it's still going to be regular form that get CSS end other elements normally, but it also able to use the action function */}
@@ -47,9 +43,7 @@ const Register = () => {
         <FormRow type="text" name="location" defaultValue="london" />
         <FormRow type="email" name="email" defaultValue="uriel@example.com" />
         <FormRow type="password" name="password" defaultValue="test1234" />
-        <button type="submit" className="btn btn-block" disabled={isSubmitting}>
-          {isSubmitting ? 'submitting...' : 'submit'}
-        </button>
+        <SubmitBtn />
         <p>
           Already a member?
           <Link to="/login" className="member-btn">
