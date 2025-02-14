@@ -8,6 +8,7 @@ import {
   createJob,
   updateJob,
   deleteJob,
+  showStats,
 } from '../controllers/jobController.js';
 import {
   validateIdParam,
@@ -22,6 +23,10 @@ router
   .route('/')
   .get(getAllJobs)
   .post(checkForTestUser, validateJobInput, createJob);
+
+// IMPORTANT to set the stats route here before the route id, because otherwise express is going to think that
+// stats is the id that we're passing in, because express reads top to bottom
+router.route('/stats').get(showStats);
 
 router
   .route('/:id')
