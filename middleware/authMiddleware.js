@@ -1,4 +1,5 @@
 import {
+  BadRequestError,
   UnauthenticatedError,
   UnauthorizedError,
 } from '../errors/customErrors.js';
@@ -11,10 +12,14 @@ export const authenticateUser = (req, res, next) => {
 
   try {
     const { userId, role } = verifyJWT(token);
+    // So if the userId from our decoded token equale to our demo user id, the testUser will return true, and false otherwise
+    const testUser = userId === '67ae1bc12dd86229b57e0830';
+    // console.log(testUser); // => return true or false
+
     // console.log(user); // => { userId: '67a310c7ef650f7eb42c7d9b', role: 'admin',iat: 1738741993, exp: 1738828393 }
     // We create new property user on the request object and it will be also an object with userId and the role
     // that we can pass to the next controller/s , so our controllers of the same our protected routes
-    req.user = { userId, role };
+    req.user = { userId, role, testUser };
     next();
   } catch (error) {
     throw new UnauthenticatedError('authentication invalid');
@@ -35,4 +40,10 @@ export const authorizePermissions = (...roles) => {
     // console.log(roles); => [ 'admin' ]
     next();
   };
+};
+
+// So if the testUser is true, wa wanna throw bad request every important route like post, update, edit, delete etc..
+export const checkForTestUser = (req, res, next) => {
+  if (req.user.testUser) throw new BadRequestError('Demo User. Read Only!');
+  next();
 };
